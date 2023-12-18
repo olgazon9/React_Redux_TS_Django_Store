@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { AppDispatch } from '../app/store'; // Import the AppDispatch type
+import { AppDispatch } from '../app/store';
 import { registerUser } from '../features/register/registerSlice';
 
 const Register: React.FC = () => {
-  const dispatch: AppDispatch = useDispatch(); // Use the AppDispatch type
+  const dispatch: AppDispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +17,14 @@ const Register: React.FC = () => {
     try {
       const resultAction = await dispatch(registerUser({ username, email, password }));
       if (registerUser.fulfilled.match(resultAction)) {
-        // Handle success if needed
+        // Access the registered user's username directly from the response
+        const registeredUsername = resultAction.payload.user.username;
+        console.log('Registered Username:', registeredUsername);
+
+        // Assuming you have a setUsername function to update the state
+        setUsername(registeredUsername);
+
+        // You can set the username to state or use it as needed
       } else if (registerUser.rejected.match(resultAction)) {
         // Handle error if needed
       }
@@ -63,7 +70,13 @@ const Register: React.FC = () => {
         {status === 'loading' ? 'Registering...' : 'Register'}
       </button>
       {error && <div style={{ color: 'red' }}>{error}</div>}
-      {user && <div style={{ color: 'green' }}>Registration successful for {user.username}!</div>}
+      {user && (
+        <div style={{ color: 'green' }}>
+          Registration successful for {user.username}!
+        </div>
+      )}
+     
+     
     </div>
   );
 };
