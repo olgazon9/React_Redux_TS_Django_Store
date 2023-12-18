@@ -10,7 +10,22 @@ from .serializers import UserRegistrationSerializer
 from django.contrib.auth import authenticate
 from .serializers import ProductSerializer
 from rest_framework import generics
-from .models import Product
+from .models import Product,Order, OrderDetail
+from rest_framework.permissions import IsAuthenticated
+from .serializers import OrderSerializer
+
+class OrderListCreateView(generics.ListCreateAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class OrderDetailView(generics.RetrieveAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    permission_classes = [IsAuthenticated]
 
 class ProductList(generics.ListAPIView):
     queryset = Product.objects.all()

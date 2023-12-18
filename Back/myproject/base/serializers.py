@@ -2,7 +2,20 @@
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Product
+from .models import Product, Order, OrderDetail
+
+
+class OrderDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderDetail
+        fields = ['product_name', 'quantity', 'price']
+
+class OrderSerializer(serializers.ModelSerializer):
+    order_details = OrderDetailSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = ['id', 'user', 'total_amount', 'created_at', 'order_details']
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,10 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'username', 'password')
         extra_kwargs = {'password': {'write_only': True}}
         
-# myapp/serializers.py
-
-from rest_framework import serializers
-from django.contrib.auth.models import User
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:

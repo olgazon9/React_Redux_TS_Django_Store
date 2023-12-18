@@ -7,7 +7,7 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async ()
   return response.data;
 });
 
-interface Product {
+ export interface Product {
   id: number;
   name: string;
   price: number;
