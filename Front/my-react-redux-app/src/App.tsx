@@ -6,7 +6,7 @@ import Home from './components/Home'; // Replace with your Home component
 import About from './components/About'; // Replace with your About component
 import Login from './components/Login'; // Replace with your Login component
 import Register from './components/Register'; // Replace with your Register component
-
+import './App.css';
 const App = () => {
   return (
     <BrowserRouter>

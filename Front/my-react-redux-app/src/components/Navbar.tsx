@@ -1,15 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // For routing to login and register pages
-import './Navbar.css'; // Import your CSS file
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../app/store';
+import { logoutUser } from '../features/login/loginSlice';
+import './Navbar.css';
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.login);
+
+  const handleLogout = async () => {
+    try {
+      await dispatch(logoutUser() as any); // Use 'as any' to handle the type mismatch
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <nav className="colorful-navbar">
-      
-      
-
-      {/* Navigation links (optional) */}
-      <ul>
+      <ul className="nav-links">
         <li>
           <Link to="/">Home</Link>
         </li>
@@ -18,11 +28,24 @@ const Navbar = () => {
         </li>
       </ul>
 
-      {/* Login and register buttons */}
-      <div className="auth-buttons">
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
-      </div>
+      {user ? (
+        <div className="auth-buttons">
+          <span style={{ marginRight: '10px', color: '#fff' }}>
+            Welcome, {user.username}!
+          </span>
+          <button
+            className="auth-buttons button logout"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+      ) : (
+        <div className="auth-buttons">
+          <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link>
+        </div>
+      )}
     </nav>
   );
 };

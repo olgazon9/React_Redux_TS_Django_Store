@@ -57,6 +57,19 @@ export const loginUser = createAsyncThunk('login/loginUser', async (credentials:
   }
 });
 
+export const logoutUser = createAsyncThunk<null, void, { rejectValue: string }>('login/logoutUser', async (_, { rejectWithValue }) => {
+  try {
+    // Add any necessary logic for logging the user out, such as clearing tokens or making API requests
+    // For example, you can clear the authentication token from sessionStorage:
+    sessionStorage.removeItem('authToken');
+
+    return null; // Return null as there's no user after logout
+  } catch (error: any) {
+    console.error('Error in logoutUser:', error);
+    return rejectWithValue(error.response?.data ?? 'An error occurred during logout');
+  }
+});
+
 const loginSlice = createSlice({
   name: 'login',
   initialState,
@@ -72,6 +85,18 @@ const loginSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload as string;
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.status = 'idle';
+        state.user = null; // Set user to null after logout
+        state.error = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload as string;
       });
