@@ -1,0 +1,23 @@
+.colorful-navbar {
+    background-color: #F0F8FF; /* Change this to your desired color */
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .auth-buttons {
+    display: flex;
+    gap: 10px; /* Adjust the gap between buttons */
+  }
+  
+  .auth-buttons a {
+    color: #212529; /* Change this to your desired color */
+    padding: 8px 12px;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+  
+  .auth-buttons a:hover {
+    background-color: #EEE;
+  }
+  

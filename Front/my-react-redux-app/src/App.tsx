@@ -1,21 +1,23 @@
-// src/App.tsx
-
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Login from './components/Login';
-import Register from './components/Register';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
+import Navbar from './components/Navbar';
+import Home from './components/Home'; // Replace with your Home component
+import About from './components/About'; // Replace with your About component
+import Login from './components/Login'; // Replace with your Login component
+import Register from './components/Register'; // Replace with your Register component
 
-const App: React.FC = () => {
+const App = () => {
   return (
-    <Provider store={store}>
-      <div className="App">
-        <h1>React Redux Auth App</h1>
-        <Login /> {/* This is the correction */}
-        <Register /> {/* This is the correction */}
-      </div>
-    </Provider>
+    <BrowserRouter>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
