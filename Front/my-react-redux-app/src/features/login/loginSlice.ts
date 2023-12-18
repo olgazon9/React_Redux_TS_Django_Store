@@ -3,8 +3,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { loginApi } from './loginApi';
 
+interface AuthUser {
+  id: number;
+  username: string;
+  // Add other user details as needed
+}
+
+interface ApiResponse {
+  access_token: string;
+  user: AuthUser;
+  // Add other properties as needed
+}
+
 interface LoginState {
-  user: any; // Adjust the type based on your actual user structure
+  user: AuthUser | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
@@ -15,9 +27,34 @@ const initialState: LoginState = {
   error: null,
 };
 
-export const loginUser = createAsyncThunk('login/loginUser', async (credentials: any) => {
-  const response = await loginApi(credentials);
-  return response.data; // Adjust this based on your API response structure
+export const loginUser = createAsyncThunk('login/loginUser', async (credentials: any, { rejectWithValue }) => {
+  try {
+    const response = await loginApi(credentials);
+
+    // Assuming the user data is directly under the 'user' key
+    const apiResponse: ApiResponse = response.data;
+
+    console.log('API Response:', apiResponse);
+
+    const token = apiResponse.access_token;
+
+    if (!token) {
+      throw new Error('Access token not found in the API response');
+    }
+
+    sessionStorage.setItem('authToken', token);
+
+    const authUser: AuthUser = apiResponse.user;
+
+    if (!authUser) {
+      throw new Error('User data not found in the API response');
+    }
+
+    return authUser;
+  } catch (error: any) {
+    console.error('Error in loginUser:', error);
+    return rejectWithValue(error.response?.data ?? 'An error occurred');
+  }
 });
 
 const loginSlice = createSlice({
@@ -36,7 +73,7 @@ const loginSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message ?? 'Unknown error';
+        state.error = action.payload as string;
       });
   },
 });

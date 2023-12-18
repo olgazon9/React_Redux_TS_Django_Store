@@ -7,7 +7,7 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from .serializers import UserRegistrationSerializer
-
+from django.contrib.auth import authenticate
 
 class UserRegistrationView(APIView):
     def post(self, request):
@@ -22,12 +22,18 @@ class LoginView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
 
-        user = User.objects.filter(username=username).first()
+        # Authenticate user
+        user = authenticate(username=username, password=password)
 
-        if user is None or not user.check_password(password):
+        if user is not None:
+            # User is authenticated, generate access token
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+
+            # Serialize user data
+            serializer = UserSerializer(user)
+
+            return Response({'access_token': access_token, 'user': serializer.data}, status=status.HTTP_200_OK)
+        else:
+            # Invalid credentials
             return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-
-        return Response({'access_token': access_token}, status=status.HTTP_200_OK)
