@@ -8,6 +8,13 @@ from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from .serializers import UserRegistrationSerializer
 from django.contrib.auth import authenticate
+from .serializers import ProductSerializer
+from rest_framework import generics
+from .models import Product
+
+class ProductList(generics.ListAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 class UserRegistrationView(APIView):
     def post(self, request):

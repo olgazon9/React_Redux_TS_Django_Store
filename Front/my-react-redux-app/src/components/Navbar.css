@@ -3,12 +3,16 @@
     color: #FDFDFD; /* Lighter green for brighter text */
     display: flex;
     justify-content: space-between;
+    align-items: center; /* Center items vertically */
     padding: 10px 20px;
 }
 
 .nav-links {
+    list-style: none; /* Remove list bullet points */
     display: flex;
     gap: 15px; /* Adjust gap between links */
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
 }
 
 .nav-links a {

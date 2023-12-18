@@ -1,3 +1,5 @@
+// src/components/Navbar.tsx
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,7 +13,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await dispatch(logoutUser() as any); // Use 'as any' to handle the type mismatch
+      await dispatch(logoutUser() as any);
     } catch (error) {
       console.error('Error logging out:', error);
     }
@@ -25,6 +27,9 @@ const Navbar = () => {
         </li>
         <li>
           <Link to="/about">About</Link>
+        </li>
+        <li>
+          <Link to="/products">Products</Link> {/* Add this line */}
         </li>
       </ul>
 
