@@ -8,7 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import CSS
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // Import JS (optional)
 import { Product } from '../features/products/productsSlice';
 import Cart from './Cart';
-import { login } from '../features/auth/authSlice';
 
 const Products: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -20,18 +19,8 @@ const Products: React.FC = () => {
   }, [dispatch]);
 
   const handleBuyClick = (product: Product) => {
-    if (isAuthenticated) {
-      // Assume the quantity is 1 for simplicity, modify as needed
-      dispatch(addToCart({ id: product.id, name: product.name, price: product.price, quantity: 1 }));
-    } else {
-      // Simulate a login for testing purposes
-      simulateLogin();
-    }
-  };
-
-  const simulateLogin = () => {
-    const apiResponse = { access_token: 'your_access_token_here', user: {} };
-    dispatch(login(apiResponse));
+    // Assume the quantity is 1 for simplicity, modify as needed
+    dispatch(addToCart({ id: product.id, name: product.name, price: product.price, quantity: 1 }));
   };
 
   if (status === 'loading') {
@@ -46,11 +35,7 @@ const Products: React.FC = () => {
     <div className="container mt-5">
       <h2 className="text-center mb-4">Products</h2>
       <Cart />
-      {!isAuthenticated && (
-        <div className="alert alert-warning" role="alert">
-          You are not logged in. Please log in to add items to your cart.
-        </div>
-      )}
+    
       <div className="row justify-content-center">
         {data.map((product) => (
           <div key={product.id} className="col-md-4 mb-3">
