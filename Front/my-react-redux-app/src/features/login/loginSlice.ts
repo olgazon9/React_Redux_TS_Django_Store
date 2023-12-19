@@ -17,12 +17,14 @@ interface ApiResponse {
 
 interface LoginState {
   user: AuthUser | null;
+  isAuthenticated: boolean;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: LoginState = {
   user: null,
+  isAuthenticated: false,
   status: 'idle',
   error: null,
 };
@@ -31,7 +33,6 @@ export const loginUser = createAsyncThunk('login/loginUser', async (credentials:
   try {
     const response = await loginApi(credentials);
 
-    // Assuming the user data is directly under the 'user' key
     const apiResponse: ApiResponse = response.data;
 
     console.log('API Response:', apiResponse);
@@ -59,11 +60,8 @@ export const loginUser = createAsyncThunk('login/loginUser', async (credentials:
 
 export const logoutUser = createAsyncThunk<null, void, { rejectValue: string }>('login/logoutUser', async (_, { rejectWithValue }) => {
   try {
-    // Add any necessary logic for logging the user out, such as clearing tokens or making API requests
-    // For example, you can clear the authentication token from sessionStorage:
     sessionStorage.removeItem('authToken');
-
-    return null; // Return null as there's no user after logout
+    return null;
   } catch (error: any) {
     console.error('Error in logoutUser:', error);
     return rejectWithValue(error.response?.data ?? 'An error occurred during logout');
@@ -76,24 +74,24 @@ const loginSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loginUser.pending, (state) => {
-        state.status = 'loading';
-      })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
+        state.isAuthenticated = true;
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload as string;
+        state.isAuthenticated = false;
+        state.error = 'Unauthorized access. Please check your credentials.';
       })
       .addCase(logoutUser.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.status = 'idle';
-        state.user = null; // Set user to null after logout
+        state.user = null;
+        state.isAuthenticated = false;
         state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {

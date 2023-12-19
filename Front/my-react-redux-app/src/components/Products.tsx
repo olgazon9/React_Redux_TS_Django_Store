@@ -12,7 +12,6 @@ import Cart from './Cart';
 const Products: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { data, status, error } = useSelector((state: RootState) => state.products);
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -34,8 +33,6 @@ const Products: React.FC = () => {
   return (
     <div className="container mt-5">
       <h2 className="text-center mb-4">Products</h2>
-      <Cart />
-    
       <div className="row justify-content-center">
         {data.map((product) => (
           <div key={product.id} className="col-md-4 mb-3">
@@ -56,6 +53,9 @@ const Products: React.FC = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-4">
+        <Cart /> {/* Include the Cart component */}
       </div>
     </div>
   );
