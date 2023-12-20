@@ -1,5 +1,4 @@
-# myapp/views.py
-
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -13,18 +12,34 @@ from rest_framework import generics
 from .models import Product,Order, OrderDetail
 from rest_framework.permissions import IsAuthenticated
 from .serializers import OrderSerializer
+from rest_framework.generics import CreateAPIView
 
-class OrderListCreateView(generics.ListCreateAPIView):
+
+
+class OrderListCreateView(CreateAPIView):
     permission_classes = [IsAuthenticated]
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        try:
+            order_details_data = self.request.data.get('order_details', [])
+            
+            total_amount = self.request.data.get('total_amount', 0)
+            user = self.request.user
 
+            # Create the order
+            order = serializer.save(user=user, total_amount=total_amount)
+
+            # Create associated order details
+            OrderDetail.objects.bulk_create([
+                OrderDetail(order=order, **detail) for detail in order_details_data
+            ])
+
+            return JsonResponse({'message': 'Order placed successfully!', 'order_id': order.id})
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 class OrderDetailView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+   
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]

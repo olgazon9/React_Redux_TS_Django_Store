@@ -1,15 +1,24 @@
-// src/components/Cart.tsx
-
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { removeFromCart } from '../features/cart/cartSlice';
+import { jwtDecode as jwt_decode } from 'jwt-decode'; 
+
+interface JwtToken {
+  user_id: number;
+}
+
+interface CartItem {
+  id: number;
+  name: string;
+  price: number;
+  quantity: number;
+}
 
 const Cart: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const authToken = useSelector((state: RootState) => state.auth.authToken); // Corrected property name
-  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const authToken = useSelector((state: RootState) => state.auth.authToken);
+  const cartItems = useSelector((state: RootState) => state.cart.items) as CartItem[];
 
   const handleRemoveFromCart = (productId: number) => {
     dispatch(removeFromCart(productId));
@@ -18,40 +27,48 @@ const Cart: React.FC = () => {
   const totalSum = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleCheckout = async () => {
-    console.log('isAuthenticated:', isAuthenticated);
-    console.log('authToken:', authToken);
-
-    if (!isAuthenticated) {
-      console.log('Authentication failed. Please login to proceed with the checkout.');
+    if (!authToken) {
+      console.error('Authentication token not found.');
       return;
     }
 
     try {
+      const decodedToken = jwt_decode<JwtToken>(authToken);
+      const userId = decodedToken.user_id;
+
+      const orderPayload = {
+        total_amount: totalSum,
+        user: userId,
+        order_details: cartItems.map(item => ({
+          product_name: item.name,
+          quantity: item.quantity,
+          price: item.price
+        }))
+      };
+
       const response = await fetch('http://127.0.0.1:8000/orders/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
+          'Authorization': `Bearer ${authToken}`
         },
-        body: JSON.stringify({
-          items: cartItems.map(item => ({ productId: item.id, quantity: item.quantity })),
-        }),
+        body: JSON.stringify(orderPayload)
       });
 
-      console.log('Response:', response);
-
-      if (response.ok) {
-        console.log('Order placed successfully!');
-        // You may want to dispatch an action to clear the cart or navigate to a confirmation page
-        // dispatch(clearCart());
-      } else {
-        console.error('Failed to place the order. Please try again.');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+
+      console.log('Order placed successfully');
+      // Handle successful order placement here
     } catch (error) {
-      console.error('Error while placing the order:', error);
-      console.error('An error occurred. Please try again.');
+      console.error('Error placing order:', error);
     }
   };
+
+  useEffect(() => {
+    // Other useEffect logic if needed
+  }, []);
 
   return (
     <div className="card">
