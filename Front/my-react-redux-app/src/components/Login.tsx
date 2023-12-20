@@ -38,7 +38,7 @@ const Login: React.FC = () => {
           disabled={status === 'loading'}
         />
       </div>
-      <button onClick={handleLogin} disabled={status === 'loading'}>
+      <button type="button" className="btn btn-outline-success" onClick={handleLogin} disabled={status === 'loading'}>
         {status === 'loading' ? 'Logging In...' : 'Login'}
       </button>
       {error && <div style={{ color: 'red' }}>{error}</div>}

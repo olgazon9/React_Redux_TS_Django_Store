@@ -66,7 +66,7 @@ const Register: React.FC = () => {
           disabled={status === 'loading'}
         />
       </div>
-      <button onClick={handleRegister} disabled={status === 'loading'}>
+      <button type="button" className="btn btn-outline-success" onClick={handleRegister} disabled={status === 'loading'}>
         {status === 'loading' ? 'Registering...' : 'Register'}
       </button>
       {error && <div style={{ color: 'red' }}>{error}</div>}
