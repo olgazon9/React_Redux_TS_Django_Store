@@ -15,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import OrderSerializer
 
 class OrderListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]
@@ -23,6 +24,7 @@ class OrderListCreateView(generics.ListCreateAPIView):
         serializer.save(user=self.request.user)
 
 class OrderDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     permission_classes = [IsAuthenticated]

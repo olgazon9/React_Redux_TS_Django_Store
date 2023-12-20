@@ -4,7 +4,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { logoutUser } from '../features/login/loginSlice';
+import { logoutUser } from '../features/login/loginSlice'; 
 import './Navbar.css';
 
 const Navbar = () => {

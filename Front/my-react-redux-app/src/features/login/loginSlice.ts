@@ -2,6 +2,7 @@
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { loginApi } from './loginApi';
+import { login } from '../auth/authSlice';
 
 interface AuthUser {
   id: number;
@@ -29,10 +30,9 @@ const initialState: LoginState = {
   error: null,
 };
 
-export const loginUser = createAsyncThunk('login/loginUser', async (credentials: any, { rejectWithValue }) => {
+export const loginUser = createAsyncThunk('login/loginUser', async (credentials: any, { dispatch }) => {
   try {
     const response = await loginApi(credentials);
-
     const apiResponse: ApiResponse = response.data;
 
     console.log('API Response:', apiResponse);
@@ -45,6 +45,9 @@ export const loginUser = createAsyncThunk('login/loginUser', async (credentials:
 
     sessionStorage.setItem('authToken', token);
 
+    // Dispatch the login action with the received access token
+    dispatch(login(apiResponse.access_token));
+
     const authUser: AuthUser = apiResponse.user;
 
     if (!authUser) {
@@ -54,19 +57,22 @@ export const loginUser = createAsyncThunk('login/loginUser', async (credentials:
     return authUser;
   } catch (error: any) {
     console.error('Error in loginUser:', error);
-    return rejectWithValue(error.response?.data ?? 'An error occurred');
+    throw error;
   }
 });
 
-export const logoutUser = createAsyncThunk<null, void, { rejectValue: string }>('login/logoutUser', async (_, { rejectWithValue }) => {
-  try {
-    sessionStorage.removeItem('authToken');
-    return null;
-  } catch (error: any) {
-    console.error('Error in logoutUser:', error);
-    return rejectWithValue(error.response?.data ?? 'An error occurred during logout');
+export const logoutUser = createAsyncThunk<null, void, { rejectValue: string }>(
+  'login/logoutUser',
+  async (_, { rejectWithValue }) => {
+    try {
+      sessionStorage.removeItem('authToken');
+      return null;
+    } catch (error: any) {
+      console.error('Error in logoutUser:', error);
+      return rejectWithValue(error.response?.data ?? 'An error occurred during logout');
+    }
   }
-});
+);
 
 const loginSlice = createSlice({
   name: 'login',
