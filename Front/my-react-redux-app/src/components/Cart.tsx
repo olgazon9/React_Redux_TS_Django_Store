@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
-import { removeFromCart } from '../features/cart/cartSlice';
+import { removeFromCart, clearCart } from '../features/cart/cartSlice'; // Import clearCart action
 import { jwtDecode as jwt_decode } from 'jwt-decode'; 
 
 interface JwtToken {
@@ -19,6 +19,7 @@ const Cart: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const authToken = useSelector((state: RootState) => state.auth.authToken);
   const cartItems = useSelector((state: RootState) => state.cart.items) as CartItem[];
+  const [orderPlaced, setOrderPlaced] = useState(false);
 
   const handleRemoveFromCart = (productId: number) => {
     dispatch(removeFromCart(productId));
@@ -28,7 +29,7 @@ const Cart: React.FC = () => {
 
   const handleCheckout = async () => {
     if (!authToken) {
-      console.error('Authentication token not found.');
+      alert('Please log in to place an order.'); // Alert for non-authenticated users
       return;
     }
 
@@ -59,8 +60,9 @@ const Cart: React.FC = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
+      dispatch(clearCart()); // Clear the cart after successful order placement
+      setOrderPlaced(true);
       console.log('Order placed successfully');
-      // Handle successful order placement here
     } catch (error) {
       console.error('Error placing order:', error);
     }
@@ -72,8 +74,10 @@ const Cart: React.FC = () => {
 
   return (
     <div className="card">
+      {orderPlaced && <div className="alert alert-success">Order placed successfully!</div>}
       <div className="card-body">
         <h5 className="card-title">Shopping Cart</h5>
+        {!authToken && <div className="alert alert-warning">Please log in to proceed with checkout.</div>}
         <ul className="list-group">
           {cartItems.map((item) => (
             <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
