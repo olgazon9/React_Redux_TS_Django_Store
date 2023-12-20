@@ -44,7 +44,7 @@ const Products: React.FC = () => {
                 <p className="card-text">Price: ${product.price}</p>
                 <button
                   type="button"
-                  className="btn btn-outline-secondary"
+                  className ="btn btn-outline-success"
                   onClick={() => handleBuyClick(product)}
                 >
                   Buy

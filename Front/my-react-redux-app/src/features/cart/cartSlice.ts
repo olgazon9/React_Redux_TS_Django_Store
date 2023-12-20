@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 
-interface CartItem {
+// Moved TypeScript interfaces here
+export interface JwtToken {
+  user_id: number;
+}
+
+export interface CartItem {
   id: number;
   name: string;
   price: number;
@@ -33,13 +38,11 @@ export const cartSlice = createSlice({
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
     clearCart: (state) => {
-      state.items = []; // Clears the cart by setting items to an empty array
+      state.items = []; // Clears the cart
     },
   },
 });
 
 export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
-
 export const selectCart = (state: RootState) => state.cart;
-
 export default cartSlice.reducer;
