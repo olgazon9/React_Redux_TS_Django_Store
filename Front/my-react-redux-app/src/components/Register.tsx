@@ -1,10 +1,9 @@
-// src/components/Register.tsx
-
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { AppDispatch } from '../app/store';
 import { registerUser } from '../features/register/registerSlice';
+import '../features/register/Register.css'; // Import the CSS file for styling
 
 const Register: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -34,49 +33,55 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <div>
+    <div className="register-container">
+      <h2 className="register-title">Register</h2>
+      <div className="register-form">
         <label htmlFor="username">Username:</label>
         <input
           type="text"
           id="username"
+          className="register-input"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           disabled={status === 'loading'}
         />
-      </div>
-      <div>
+
         <label htmlFor="email">Email:</label>
         <input
           type="email"
           id="email"
+          className="register-input"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={status === 'loading'}
         />
-      </div>
-      <div>
+
         <label htmlFor="password">Password:</label>
         <input
           type="password"
           id="password"
+          className="register-input"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={status === 'loading'}
         />
+
+        <button
+          type="button"
+          className="register-button"
+          onClick={handleRegister}
+          disabled={status === 'loading'}
+        >
+          {status === 'loading' ? 'Registering...' : 'Register'}
+        </button>
       </div>
-      <button type="button" className="btn btn-outline-success" onClick={handleRegister} disabled={status === 'loading'}>
-        {status === 'loading' ? 'Registering...' : 'Register'}
-      </button>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+
+      {error && <div className="error-message">{error}</div>}
       {user && (
-        <div style={{ color: 'green' }}>
+        <div className="success-message">
           Registration successful for {user.username}!
         </div>
       )}
-     
-     
     </div>
   );
 };

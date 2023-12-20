@@ -1,9 +1,8 @@
-// src/components/Login.tsx
-
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { loginUser } from '../features/login/loginSlice';
 import { useState } from 'react';
+import '../features/login/Login.css'; // Import the CSS file
 
 const Login: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -16,11 +15,12 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="login-container">
+      <h2 className="login-title">Login</h2>
       <div>
         <label htmlFor="username">Username:</label>
         <input
+          className="login-input"
           type="text"
           id="username"
           value={username}
@@ -31,6 +31,7 @@ const Login: React.FC = () => {
       <div>
         <label htmlFor="password">Password:</label>
         <input
+          className="login-input"
           type="password"
           id="password"
           value={password}
@@ -38,11 +39,19 @@ const Login: React.FC = () => {
           disabled={status === 'loading'}
         />
       </div>
-      <button type="button" className="btn btn-outline-success" onClick={handleLogin} disabled={status === 'loading'}>
+      <button
+        type="button"
+        className="login-button"
+        onClick={handleLogin}
+        disabled={status === 'loading'}
+      >
         {status === 'loading' ? 'Logging In...' : 'Login'}
       </button>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      {user && <div style={{ color: 'green' }}>Welcome, {user.username}!</div>}
+      {error && <div className="error-message">{error}</div>}
+      {user && <div className="success-message">Welcome, {user.username}!</div>}
+      <div className="register-link">
+        Don't have an account yet? <a href="/register">Register</a>
+      </div>
     </div>
   );
 };

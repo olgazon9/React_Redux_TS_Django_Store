@@ -11,6 +11,7 @@ const Cart: React.FC = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items) as CartItem[];
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [paypalError, setPaypalError] = useState<string | null>(null);
+  const [showLoginAlert, setShowLoginAlert] = useState<boolean>(false); // New state
 
   const handleRemoveFromCart = (productId: number) => {
     dispatch(removeFromCart(productId));
@@ -38,13 +39,25 @@ const Cart: React.FC = () => {
     // Add any useEffect logic here if needed
   }, []);
 
+  useEffect(() => {
+    // Show the login alert if the user is not authenticated
+    setShowLoginAlert(!authToken);
+  }, [authToken]);
+
   return (
     <div className="card">
       {orderPlaced && <div className="alert alert-success">Order placed successfully!</div>}
       {paypalError && <div className="alert alert-danger">{paypalError}</div>}
+      {showLoginAlert && (
+        <div className="alert alert-danger">
+          Please log in to proceed with checkout.
+        </div>
+      )}
       <div className="card-body">
         <h5 className="card-title">Shopping Cart</h5>
-        {!authToken && <div className="alert alert-warning">Please log in to proceed with checkout.</div>}
+        {!authToken && !showLoginAlert && (
+          <div className="alert alert-warning">Please log in to proceed with checkout.</div>
+        )}
         <ul className="list-group">
           {cartItems.map((item) => (
             <li key={item.id} className="list-group-item d-flex justify-content-between align-items-center">
