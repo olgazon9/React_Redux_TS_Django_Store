@@ -9,6 +9,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Products from './components/Products'; // Import the Products component
 import './App.css';
+import Reviews from './components/Reviews';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/products" element={<Products />} /> {/* Add this line */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/reviews" element={<Reviews />} />
       </Routes>
     </BrowserRouter>
   );

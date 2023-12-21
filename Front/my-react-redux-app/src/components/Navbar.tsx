@@ -31,7 +31,11 @@ const Navbar = () => {
         <li>
           <Link to="/products">Products</Link> {/* Add this line */}
         </li>
+        <li>
+          <Link to="/reviews">Reviews</Link> {/* Add this line */}
+        </li>
       </ul>
+
 
       {user ? (
         <div className="auth-buttons">
