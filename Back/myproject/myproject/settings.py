@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-h(=ajz7nzu*rtij49mp1x()oky80_k40@hs#vt179^k12rs0)8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,6 +78,10 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
 ]
 
 WSGI_APPLICATION = 'myproject.wsgi.application'
@@ -150,4 +154,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+# settings.py
+
+# Email Backend for Production (Sends real emails)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # SMTP Host
+EMAIL_PORT = 587                             # SMTP Port (commonly 587 for TLS)
+EMAIL_HOST_USER = 'rfonderbrider@gmail.com'   # Your email address
+EMAIL_HOST_PASSWORD = 'jmkv tzgs xluc yrsz'  # Your email password
+EMAIL_USE_TLS = True                         # Use TLS (True/False)
 

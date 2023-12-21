@@ -13,10 +13,41 @@ from .models import Product,Order, OrderDetail
 from rest_framework.permissions import IsAuthenticated
 from .serializers import OrderSerializer
 from rest_framework.generics import CreateAPIView
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail, get_connection
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from rest_framework.decorators import api_view
 
+@api_view(['POST'])
+def send_password_reset_email(request):
+    if request.method == 'POST':
+        email = request.data.get('email')  # Get email from request data
+        if not email:
+            return Response({"error": "Email is required"}, status=400)
 
+        try:
+            connection = get_connection()
+            connection.open()
 
+            send_mail(
+                "Password Reset Request",
+                "Here is the message to reset your password.",
+                settings.EMAIL_HOST_USER,
+                [email],  # Use the provided email address
+                fail_silently=False,
+                connection=connection,
+            )
+
+            connection.close()
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+
+        return Response({"message": "Email sent successfully"})
+
+    return Response({"message": "POST request required"}, status=400)
 class OrderListCreateView(CreateAPIView):
+    
     permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
 

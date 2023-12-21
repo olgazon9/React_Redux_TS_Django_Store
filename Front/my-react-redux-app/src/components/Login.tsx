@@ -1,8 +1,8 @@
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../app/store';
 import { loginUser } from '../features/login/loginSlice';
-import { useState } from 'react';
-import '../features/login/Login.css'; // Import the CSS file
+import '../features/login/Login.css'; // Ensure this path is correct
 
 const Login: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -49,6 +49,9 @@ const Login: React.FC = () => {
       </button>
       {error && <div className="error-message">{error}</div>}
       {user && <div className="success-message">Welcome, {user.username}!</div>}
+      <div className="forgot-password-link">
+        <a href="/forgot-password">Forgot Password?</a>
+      </div>
       <div className="register-link">
         Don't have an account yet? <a href="/register">Register</a>
       </div>
