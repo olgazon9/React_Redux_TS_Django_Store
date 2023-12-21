@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import { logoutUser } from '../features/login/loginSlice'; 
-import './Navbar.css';
+import '../features/navbar/Navbar.css';
 
 const Navbar = () => {
   const dispatch = useDispatch();
