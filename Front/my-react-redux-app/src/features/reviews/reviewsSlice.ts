@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 export interface Review {
   id: number;
@@ -7,20 +7,19 @@ export interface Review {
   author: string;
 }
 
+// Updated initialState with correct image paths
 const initialState: Review[] = [
-  // Add your review objects here
-   { id: 1, image: 'image1.jpg', text: 'Review 1', author: 'Author 1' },
-   { id: 3, image: 'image1.jpg', text: 'Review 1', author: 'Author 1' },
-   { id: 4, image: 'image1.jpg', text: 'Review 1', author: 'Author 1' },
-   { id: 2, image: 'image2.jpg', text: 'Review 2', author: 'Author 2' },
-  // ...
+  { id: 1, image: '/images/image1.png', text: 'Amazing product! Highly recommended for anyone looking for quality.', author: 'John Doe' },
+  { id: 2, image: '/images/image2.png', text: 'Exceptional service and fantastic quality. Will definitely buy again!', author: 'Jane Smith' },
+  { id: 3, image: '/images/image3.png', text: 'I am thoroughly impressed with the customer support. Highly satisfied!', author: 'Alice Johnson' },
+  { id: 4, image: '/images/image4.png', text: 'The product exceeded my expectations in every way. Great value for money!', author: 'Bob Brown' }
 ];
 
 const reviewsSlice = createSlice({
   name: 'reviews',
   initialState,
   reducers: {
-    // Add any reducers you might need
+    // Reducers logic (if any)
   },
 });
 

@@ -1,27 +1,27 @@
 .colorful-navbar {
     background-color: #2e552e; /* Darker green for increased contrast */
-    color: #FDFDFD; /* Lighter green for brighter text */
+    color: #FDFDFD; /* Light text for better readability */
     display: flex;
     justify-content: space-between;
     align-items: center; /* Center items vertically */
     padding: 10px 20px;
+    font-family: 'Arial', sans-serif; /* Elegant and readable font */
 }
 
 .nav-links {
     list-style: none; /* Remove list bullet points */
     display: flex;
     gap: 15px; /* Adjust gap between links */
-    justify-content: center; /* Center items horizontally */
-    align-items: center; /* Center items vertically */
 }
 
 .nav-links a {
-    color: inherit; /* Inherit light green from parent */
+    color: inherit; /* Inherit light text color from parent */
     text-decoration: none;
     font-weight: bold;
+    font-size: 1.05em; /* Slightly larger font size */
     padding-bottom: 5px; /* Add space for underline */
     position: relative; /* Needed for underline */
-    text-shadow: 0 1px 0 #fff; /* Subtle white text-shadow for depth */
+    text-shadow: 0 2px 1px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
 }
 
 .nav-links a::after {
@@ -49,21 +49,19 @@
 .auth-buttons button {
     padding: 8px 12px;
     border-radius: 5px;
-    font-size: 0.85em;
+    font-size: 0.9em; /* Slightly larger font size */
     transition: color 0.2s ease-in-out;
-    text-shadow: 0 1px 0 #fff;
+    text-shadow: 0 2px 1px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
 }
 
 .auth-buttons button.login {
     border: 1px solid #4F9346;
     background-color: #4F9346; /* Darker green background for Login */
-    color: #FDFDFD; /* Lighter text for Login */
 }
 
 .auth-buttons button.logout,
 .auth-buttons button.register {
     background-color: #2e552e; /* Same as navbar background */
-    color: #FDFDFD; /* Same light green as navbar text */
 }
 
 .auth-buttons button.register {
