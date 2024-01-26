@@ -43,3 +43,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             email=validated_data['email']
         )
         return user
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'is_superuser']  # Include is_superuser

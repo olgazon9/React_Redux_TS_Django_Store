@@ -5,6 +5,7 @@ import { loginApi } from './loginApi';
 import { login } from '../auth/authSlice';
 
 interface AuthUser {
+  is_superuser: AuthUser | null;
   id: number;
   username: string;
   // Add other user details as needed

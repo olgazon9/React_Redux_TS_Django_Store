@@ -29,13 +29,17 @@ const Navbar = () => {
           <Link to="/about">About</Link>
         </li>
         <li>
-          <Link to="/products">Products</Link> {/* Add this line */}
+          <Link to="/products">Products</Link>
         </li>
         <li>
-          <Link to="/reviews">Reviews</Link> {/* Add this line */}
+          <Link to="/reviews">Reviews</Link>
         </li>
+        {user && user.is_superuser && (
+          <li>
+            <Link to="/manager-area">Manager Area</Link> {/* Manager only link */}
+          </li>
+        )}
       </ul>
-
 
       {user ? (
         <div className="auth-buttons">
