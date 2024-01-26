@@ -164,3 +164,5 @@ EMAIL_HOST_USER = 'rfonderbrider@gmail.com'   # Your email address
 EMAIL_HOST_PASSWORD = 'jmkv tzgs xluc yrsz'  # Your email password
 EMAIL_USE_TLS = True                         # Use TLS (True/False)
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static',]  # Adjust this to your static directory path

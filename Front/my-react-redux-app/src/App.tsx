@@ -7,7 +7,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Products from './components/Products';
 import Reviews from './components/Reviews';
-import ForgotPassword from './components/ForgotPassword'; // Make sure this import is correct
+import ForgotPassword from './components/ForgotPassword';
+import ManagerComponent from './components/ManagerComponent'; // Import ManagerComponent
 import './App.css';
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/manager-area" element={<ManagerComponent />} /> {/* Add Manager Area route */}
       </Routes>
     </BrowserRouter>
   );

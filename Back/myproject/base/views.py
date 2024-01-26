@@ -18,6 +18,9 @@ from django.core.mail import send_mail, get_connection
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from rest_framework.decorators import api_view
+from rest_framework import permissions
+from rest_framework.permissions import IsAdminUser
+
 
 @api_view(['POST'])
 def send_password_reset_email(request):
@@ -111,3 +114,13 @@ class LoginView(APIView):
         else:
             # Invalid credentials
             return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+class ProductListCreateView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    
