@@ -21,15 +21,16 @@ This project is a fully functional e-commerce platform built using Django, React
 ### Setting Up the Backend
 To get the backend running:
 
-```bash
+
 cd back
 cd myproject
 py manage.py runserver
+for docker - docker run -p 8080:8080 myproject
 
 ### Setting Up the Frontend
 To start the frontend application:
 
-```bash
+
 cd front
 cd my-react-redux-app
 npm install --force
