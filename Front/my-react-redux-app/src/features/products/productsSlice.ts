@@ -7,11 +7,15 @@ export interface Product {
   name: string;
   price: number;
   description: string;
-  image: string | File | null; // Image can be a URL string, File object, or null
+  image: string | null; // Image as a URL string
+}
+
+interface ProductFormData {
+  id?: number;
+  formData: FormData;
 }
 
 interface ProductState {
-  selectedFile: any;
   products: Product[];
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null | undefined;
@@ -20,8 +24,7 @@ interface ProductState {
 const initialState: ProductState = {
   products: [],
   status: 'idle',
-  error: null,
-  selectedFile: undefined
+  error: null
 };
 
 const BASE_URL = 'http://127.0.0.1:8000/products';
@@ -38,29 +41,11 @@ export const fetchProducts = createAsyncThunk('products/fetchProducts', async (_
 
 export const createProduct = createAsyncThunk(
   'products/createProduct', 
-  async (productData: Product, { rejectWithValue, getState }) => {
+  async (productFormData: ProductFormData, { rejectWithValue }) => {
     try {
-      const formData = new FormData();
-      const state = getState() as RootState;
-      // Adjust this path based on your state structure
-      const selectedFile = state.products.selectedFile; 
-
-      Object.entries(productData).forEach(([key, value]) => {
-        if (key === 'image') {
-          if (selectedFile) {
-            // If there is a new file selected, append it
-            formData.append(key, selectedFile);
-          } // If no file is selected, do not append anything
-        } else if (value !== null) {
-          // Append other fields normally
-          formData.append(key, value.toString());
-        }
-      });
-
-      const response = await axios.post<Product>(`${BASE_URL}/create/`, formData, {
+      const response = await axios.post<Product>(`${BASE_URL}/create/`, productFormData.formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
       return response.data;
     } catch (err) {
       const error = err as AxiosError;
@@ -68,38 +53,21 @@ export const createProduct = createAsyncThunk(
     }
   }
 );
-
 
 export const updateProduct = createAsyncThunk(
   'products/updateProduct', 
-  async ({ id, ...productData }: Product, { rejectWithValue, getState }) => {
+  async (productFormData: ProductFormData, { rejectWithValue }) => {
     try {
-      const formData = new FormData();
-      const state = getState() as RootState;
-      // Replace with the actual path to selectedFile in your Redux state
-      const selectedFile = state.products.selectedFile;
-
-      Object.entries(productData).forEach(([key, value]) => {
-        if (key === 'image' && selectedFile) {
-          formData.append(key, selectedFile);
-        } else if (value !== null && key !== 'image') {
-          formData.append(key, value.toString());
-        }
-      });
-
-      const response = await axios.put<Product>(`${BASE_URL}/update/${id}/`, formData, {
+      const response = await axios.put<Product>(`${BASE_URL}/update/${productFormData.id}/`, productFormData.formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
       return response.data;
     } catch (err) {
       const error = err as AxiosError;
-      console.error(`Error updating product with id ${id}:`, error.response?.data);
       return rejectWithValue(error.message);
     }
   }
 );
-
 
 export const deleteProduct = createAsyncThunk('products/deleteProduct', async (id: number, { rejectWithValue }) => {
   try {

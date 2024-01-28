@@ -31,7 +31,6 @@ const ManagerComponent: React.FC = () => {
     const objectUrl = URL.createObjectURL(selectedFile);
     setPreviewUrl(objectUrl);
 
-    // Free memory when ever this component is unmounted
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedFile]);
 
@@ -48,15 +47,18 @@ const ManagerComponent: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const updatedProductData = { ...productData };
+    const formData = new FormData();
+    formData.append('name', productData.name);
+    formData.append('price', productData.price.toString());
+    formData.append('description', productData.description);
     if (selectedFile) {
-      updatedProductData.image = selectedFile;
+      formData.append('image', selectedFile);
     }
 
     if (editingProductId !== null) {
-      dispatch(updateProduct({ ...updatedProductData, id: editingProductId }));
+      dispatch(updateProduct({ id: editingProductId, formData }));
     } else {
-      dispatch(createProduct(updatedProductData));
+      dispatch(createProduct({ formData }));
     }
 
     setProductData({ id: 0, name: '', price: 0, description: '', image: null });
@@ -68,7 +70,6 @@ const ManagerComponent: React.FC = () => {
   const handleEdit = (product: Product) => {
     setProductData(product);
     setEditingProductId(product.id);
-    // Assuming the image is a URL string in the product data
     if (typeof product.image === 'string') {
       setPreviewUrl(product.image);
     } else {
@@ -123,6 +124,6 @@ const ManagerComponent: React.FC = () => {
       </div>
     </div>
   );
-        }  
-  export default ManagerComponent;
-  
+};
+
+export default ManagerComponent;
